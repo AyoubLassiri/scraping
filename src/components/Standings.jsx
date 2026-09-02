@@ -73,7 +73,7 @@ export default function Standings() {
               </thead>
               <tbody className="text-sm font-medium">
                 {standingsData.slice(0, 30).map((row) => {
-                  const isMyTeam = row.team.includes("مستقبل المرسى") || row.team.includes("مستقبل العيون") || row.team.includes("الوداد");
+                  const isMyTeam = row.team.includes("مستقبل المرسى") || row.team.includes("السرغيني") || row.team.includes("الوداد الرياضي السرغيني");
                   return (
                     <tr
                       key={row.rank}
