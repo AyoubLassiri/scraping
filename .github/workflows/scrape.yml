@@ -1,0 +1,30 @@
+name: Auto Scrape Football Data
+
+on:
+  schedule:
+    - cron: '0 12 * * *' # Runs every day at 12:00 PM UTC
+  workflow_dispatch: # Allows manual trigger from GitHub anytime
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run scraper script
+        run: npm run scrape
+
+      - name: Commit and push if standings or matches changed
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Auto-update football stats from scraper"
+          file_pattern: public/*.json
