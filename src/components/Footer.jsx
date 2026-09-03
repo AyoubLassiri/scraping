@@ -20,26 +20,8 @@ const ROSTER = {
 
 export default function Footer() {
   return (
-    <footer dir="rtl" className="w-full bg-gradient-to-b from-[#2596be] via-neutral-900 to-neutral-950 text-white font-sans pt-12 pb-8">
+    <footer dir="rtl" className="w-full bg-gradient-to-b from-[#2596be] via-neutral-900 to-neutral-950 dark:from-neutral-900 dark:via-neutral-950 dark:to-black text-white font-sans pt-12 pb-8 transition-colors duration-300">
       
-      {/* Top Section: Trophies */}
-      <div className="max-w-6xl mx-auto px-4 flex flex-col items-center mb-16">
-        <h2 className="text-2xl sm:text-3xl font-bold mb-8 text-center">
-          تاريخ من الأمجاد والألقاب البطولية
-        </h2>
-        
-        <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-          {TROPHIES.map((trophy) => (
-            <div key={trophy.id} className="flex flex-col items-center">
-              <div className="border border-white/30 rounded-t-sm rounded-b-xl p-3 mb-2 flex items-center justify-center bg-white/5">
-                <trophy.icon size={28} className="text-[#eab308]" />
-              </div>
-              <span className="font-bold text-lg">{trophy.count}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Middle Section: Player Columns */}
       <div className="max-w-5xl mx-auto px-4 grid grid-cols-2 md:grid-cols-4 gap-8 text-right mb-16 pt-12">
         
@@ -84,11 +66,6 @@ export default function Footer() {
       {/* Bottom Section: Logo and Disclaimer */}
       <div className="max-w-4xl mx-auto px-4 flex flex-col items-center text-center pt-10">
         
-        {/* Stars */}
-        <div className="flex gap-1 text-[#eab308] mb-4">
-          <Star size={20} fill="currentColor" />
-          <Star size={20} fill="currentColor" />
-        </div>
 
         {/* Logo */}
         <img 
@@ -102,20 +79,6 @@ export default function Footer() {
           شرف لك تلبس التوني ديال النادي<br />
           تعرڭو واجب عليك
         </h4>
-
-        {/* Disclaimer Text */}
-        <div className="text-neutral-400 text-xs sm:text-sm space-y-2 max-w-2xl">
-          <p>
-            هاد السيت مصاوبو ومجيريه واحد الودادي (بحالك غالبا). السيت ماعندو حتا علاقة مع الشركة ولا الجمعية ديال نادي مستقبل المرسى.
-          </p>
-          <p className="opacity-50">------</p>
-          <p>
-            شكرا لـ Page Onze و 11M11 ولأي واحد ساهم من قريب ولا بعيد فهاد السيت.
-          </p>
-          <p>
-            يلا عندك شي ملاحظة ولابغيتي ستون باغي تبارطاجيه، تقدر تصيفط ليا مايل هنا: <a href="mailto:contact@cmel.net" className="text-[#2596be] hover:underline">contact@cmel.net</a>
-          </p>
-        </div>
 
       </div>
     </footer>

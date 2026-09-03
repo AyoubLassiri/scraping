@@ -127,7 +127,59 @@ async function initDB() {
             console.log("Added position column to players table.");
         }
 
-        // 9. Check if products table is empty, then seed initial data
+        // 9. Create history table for dynamic club history management from the admin dashboard
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS history (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                section1Text JSON NOT NULL,
+                section1Image VARCHAR(255) NOT NULL,
+                section1Caption VARCHAR(255),
+                section2Text JSON NOT NULL,
+                section2Image VARCHAR(255) NOT NULL,
+                section2Caption VARCHAR(255),
+                section3Text JSON NOT NULL,
+                section3Media VARCHAR(255) NOT NULL,
+                section3Caption VARCHAR(255),
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+        `);
+
+        // 10. Check if history table is empty, then seed initial default history content
+        const [historyRows] = await pool.query('SELECT COUNT(*) as count FROM history');
+        if (historyRows[0].count === 0) {
+            await pool.query(`
+                INSERT INTO history (
+                    title, section1Text, section1Image, section1Caption, 
+                    section2Text, section2Image, section2Caption, 
+                    section3Text, section3Media, section3Caption
+                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            `, [
+                'التاريخ ديال نادي مستقبل المرسى الرياضي',
+                JSON.stringify([
+                    'نادي مستقبل المرسى الرياضي هو فخر المنطقة ورمز الرياضة المحلية في مدينة العيون، حيث تأسس بهدف تأطير الشباب وتطوير كرة القدم المحلية وتمثيل المدينة بأفضل حلة.',
+                    'يمتاز الفريق بألوانه المميزة وروح القتالية العالية للاعبي وجماهير النادي، مع حضور قوي ودعم مستمر في كل المباريات والمنافسات المحلية والجهوية.',
+                    'تأسس النادي بفضل جهود ثلة من الغيورين والمؤسسين الأبطال، على رأسهم المرحوم بدر المساوي، ليكون منصة حقيقية لصقل المواهب الكروية الشابة وإعطاء الإشعاع الرياضي للمنطقة.'
+                ]),
+                '/src/assets/president.jpg',
+                'بدر المساوي — المؤسس والرئيس الأول في تاريخ النادي',
+                JSON.stringify([
+                    'عرف الفريق تطوراً ملحوظاً في مسيرته الرياضية بفضل العمل الجاد للإدارة والتقنيين، محققاً نتائج متميزة في مختلف المحطات والبطولات التي شارك فيها محلياً وجهوياً.',
+                    'وتواصل إدارة النادي والأطر التقنية العمل بخطى ثابتة من أجل تعزيز مكانة مستقبل المرسى، وتطوير البنية التحتية والفئات السنية لضمان مستقبل مشرق ومستدام لكرة القدم المحلية.'
+                ]),
+                '/src/assets/director.jpg',
+                'نائب رئيس الفريق',
+                JSON.stringify([
+                    'يحمل تاريخ النادي في طياته العديد من اللحظات المبرمجة والمباريات الحماسية التي جمعته بأبرز الأندية، مما يعكس الشغف الكبير والروح الرياضية التي تسود أجواء الفريق.',
+                    'تبقى هذه المحطات والذكريات محفورة في أذهان الأنصار واللاعبين، تشكل حافزاً مستمراً لبذل المزيد من الجهد وتحقيق الطموحات الكبيرة المستقبلية لمستقبل المرسى.'
+                ]),
+                '/src/assets/visitvideo.mp4',
+                'أرشيف'
+            ]);
+            console.log("Seeded initial history record.");
+        }
+
+        // 11. Check if products table is empty, then seed initial data
         const [rows] = await pool.query('SELECT COUNT(*) as count FROM products');
         if (rows[0].count === 0) {
             const initialProducts = [
@@ -172,7 +224,7 @@ async function initDB() {
             );
         }
 
-        // 10. Check if admins table is empty, then create default admin
+        // 12. Check if admins table is empty, then create default admin
         const [adminRows] = await pool.query('SELECT COUNT(*) as count FROM admins');
         if (adminRows[0].count === 0) {
             const hashedPassword = await bcrypt.hash('admin123', 10);

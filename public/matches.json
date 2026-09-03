@@ -2,12 +2,14 @@
     {
         "lastMatch": {
             "opponent": "خصم الجولة",
+            "opponentLogo": "",
             "opponentInitials": "OPP",
             "score": "قريباً",
             "date": "البطولة الوطنية هواة"
         },
         "nextMatch": {
             "opponent": "المنافس القادم",
+            "opponentLogo": "",
             "opponentInitials": "OPP",
             "date": "قريباً"
         }
