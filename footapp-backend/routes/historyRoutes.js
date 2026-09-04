@@ -1,14 +1,21 @@
-// routes/historyRoutes.js
 const express = require('express');
 const router = express.Router();
 const historyController = require('../controllers/historyController');
-// Uncomment the line below if you have an authentication middleware for your admin routes
-// const authMiddleware = require('../middleware/authMiddleware');
+const upload = require('../middleware/uploadMiddleware'); // تأكد من مسار ملف الرفع لديك
 
-// Public route to fetch history page data
+// جلب البيانات
 router.get('/', historyController.getHistory);
 
-// Admin route to update history page data (add authMiddleware if protected)
+// حفظ البيانات (JSON)
 router.put('/', historyController.updateHistory);
+
+// مسار جديد لرفع وسائط الأقسام بشكل فردي ومباشر
+router.post('/upload', upload.single('file'), (req, res) => {
+    if (!req.file) {
+        return res.status(400).json({ error: 'No file uploaded' });
+    }
+    // إرجاع رابط الملف بعد رفعه
+    res.json({ url: `/uploads/${req.file.filename}` });
+});
 
 module.exports = router;

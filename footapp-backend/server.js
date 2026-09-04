@@ -21,6 +21,8 @@ const adminRoutes = require('./routes/adminRoutes');
 const adminOrderRoutes = require('./routes/adminOrderRoutes');
 const playerRoutes = require('./routes/playerRoutes');
 const historyRoutes = require('./routes/historyRoutes');
+// Add this to your route imports
+const postRoutes = require('./routes/postRoutes');
 
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
@@ -42,6 +44,11 @@ app.use((err, req, res, next) => {
     console.error('Unhandled Server Error:', err.stack);
     res.status(500).json({ error: 'Internal Server Error' });
 });
+
+
+
+// Add this to your API Endpoints Mounting section
+app.use('/api/posts', postRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;

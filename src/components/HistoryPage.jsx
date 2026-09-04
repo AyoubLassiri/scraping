@@ -1,52 +1,56 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import logoImage from "../assets/logoMostakhbal.png";
-import fallbackPresident from "../assets/president.jpg";
-import fallbackDirector from "../assets/director.jpg";
-import fallbackVideo from "../assets/visitvideo.mp4";
 
 export default function HistoryPage() {
   const [historyData, setHistoryData] = useState({
     title: "التاريخ ديال نادي مستقبل المرسى الرياضي",
-    section1Text: [
-      "نادي مستقبل المرسى الرياضي هو فخر المنطقة ورمز الرياضة المحلية في مدينة العيون، حيث تأسس بهدف تأطير الشباب وتطوير كرة القدم المحلية وتمثيل المدينة بأفضل حلة.",
-      "يمتاز الفريق بألوانه المميزة وروح القتالية العالية للاعبي وجماهير النادي، مع حضور قوي ودعم مستمر في كل المباريات والمنافسات المحلية والجهوية.",
-      "تأسس النادي بفضل جهود ثلة من الغيورين والمؤسسين الأبطال، على رأسهم المرحوم بدر المساوي، ليكون منصة حقيقية لصقل المواهب الكروية الشابة وإعطاء الإشعاع الرياضي للمنطقة."
-    ],
-    section1Image: fallbackPresident,
-    section1Caption: "بدر المساوي — المؤسس والرئيس الأول في تاريخ النادي",
-    section2Text: [
-      "عرف الفريق تطوراً ملحوظاً في مسيرته الرياضية بفضل العمل الجاد للإدارة والتقنيين، محققاً نتائج متميزة في مختلف المحطات والبطولات التي شارك فيها محلياً وجهوياً.",
-      "وتواصل إدارة النادي والأطر التقنية العمل بخطى ثابتة من أجل تعزيز مكانة مستقبل المرسى، وتطوير البنية التحتية والفئات السنية لضمان مستقبل مشرق ومستدام لكرة القدم المحلية."
-    ],
-    section2Image: fallbackDirector,
-    section2Caption: "نائب رئيس الفريق",
-    section3Text: [
-      "يحمل تاريخ النادي في طياته العديد من اللحظات المبرمجة والمباريات الحماسية التي جمعته بأبرز الأندية، مما يعكس الشغف الكبير والروح الرياضية التي تسود أجواء الفريق.",
-      "تبقى هذه المحطات والذكريات محفورة في أذهان الأنصار واللاعبين، تشكل حافزاً مستمراً لبذل المزيد من الجهد وتحقيق الطموحات الكبيرة المستقبلية لمستقبل المرسى."
-    ],
-    section3Media: fallbackVideo,
-    section3Caption: "أرشيف"
+    sections: []
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/history")
       .then((res) => res.json())
       .then((data) => {
         if (data && !data.error) {
-          setHistoryData((prev) => ({
-            ...prev,
-            ...data,
-            section1Text: typeof data.section1Text === "string" ? JSON.parse(data.section1Text) : (data.section1Text || prev.section1Text),
-            section2Text: typeof data.section2Text === "string" ? JSON.parse(data.section2Text) : (data.section2Text || prev.section2Text),
-            section3Text: typeof data.section3Text === "string" ? JSON.parse(data.section3Text) : (data.section3Text || prev.section3Text),
-          }));
+          let parsedSections = [];
+          
+          if (data.sections) {
+             // النظام الجديد (Dynamic Sections)
+             parsedSections = typeof data.sections === "string" ? JSON.parse(data.sections) : data.sections;
+          } else {
+             // نظام التوافق للبيانات القديمة (Fallback)
+             if (data.section1Text) parsedSections.push({ media: data.section1Image, caption: data.section1Caption, paragraphs: typeof data.section1Text === "string" ? JSON.parse(data.section1Text) : data.section1Text });
+             if (data.section2Text) parsedSections.push({ media: data.section2Image, caption: data.section2Caption, paragraphs: typeof data.section2Text === "string" ? JSON.parse(data.section2Text) : data.section2Text });
+             if (data.section3Text) parsedSections.push({ media: data.section3Media, caption: data.section3Caption, paragraphs: typeof data.section3Text === "string" ? JSON.parse(data.section3Text) : data.section3Text });
+          }
+
+          setHistoryData({
+            title: data.title || "تاريخ نادي مستقبل المرسى الرياضي",
+            sections: Array.isArray(parsedSections) ? parsedSections : []
+          });
         }
+        setLoading(false);
       })
       .catch((err) => {
         console.log("Using default history content fallback:", err);
+        setLoading(false);
       });
   }, []);
+
+  const getMediaUrl = (path) => {
+    if (!path) return "";
+    if (path.startsWith("http") || path.startsWith("blob:") || path.startsWith("data:")) {
+      return path;
+    }
+    return `http://localhost:5000${path}`;
+  };
+
+  const isVideoFile = (url) => {
+    if (!url) return false;
+    return url.endsWith(".mp4") || url.includes("video") || url.includes("mp4");
+  };
 
   return (
     <div dir="rtl" className="w-full min-h-screen bg-white dark:bg-neutral-950 font-sans text-neutral-900 dark:text-neutral-100 transition-colors duration-300 pt-16">
@@ -66,84 +70,54 @@ export default function HistoryPage() {
 
       {/* Main Content Sections with Interspersed Media */}
       <div className="max-w-6xl mx-auto px-4 py-16 space-y-16">
-        
-        {/* Section 1: Foundation & Early Years */}
-        <div className="grid md:grid-cols-12 gap-8 items-center">
-          <div className="md:col-span-7 text-neutral-800 dark:text-neutral-200 text-lg leading-relaxed space-y-4 font-medium text-right order-2 md:order-1">
-            {historyData.section1Text.map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
-          </div>
+        {loading ? (
+          <div className="text-center py-20 text-neutral-500 dark:text-neutral-400">جاري تحميل التاريخ...</div>
+        ) : historyData.sections.length === 0 ? (
+          <div className="text-center py-20 text-neutral-500 dark:text-neutral-400">لا توجد بيانات متاحة حالياً.</div>
+        ) : (
+          historyData.sections.map((section, index) => {
+            // تحديد الاتجاه لعكس تخطيط الصفحة بين يمين ويسار تلقائياً
+            const isReverse = index % 2 !== 0;
 
-          <div className="md:col-span-5 rounded-2xl overflow-hidden shadow-lg border-2 border-[#2596be]/20 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 p-2 order-1 md:order-2 transition-colors">
-            <img 
-              src={historyData.section1Image} 
-              alt="Historical figure" 
-              className="w-full h-96 object-cover rounded-xl"
-            />
-            {historyData.section1Caption && (
-              <p className="text-center text-xs text-neutral-500 dark:text-neutral-400 mt-2 font-medium">
-                {historyData.section1Caption}
-              </p>
-            )}
-          </div>
-        </div>
+            return (
+              <div key={index} className="grid md:grid-cols-12 gap-8 items-center">
+                
+                {/* قسم النصوص */}
+                <div className={`md:col-span-7 text-neutral-800 dark:text-neutral-200 text-lg leading-relaxed space-y-4 font-medium text-right order-2 ${isReverse ? 'md:order-2' : 'md:order-1'}`}>
+                  {Array.isArray(section.paragraphs) && section.paragraphs.map((paragraph, pIndex) => (
+                    <p key={pIndex}>{paragraph}</p>
+                  ))}
+                </div>
 
-        {/* Section 2: Golden Era & Titles */}
-        <div className="grid md:grid-cols-12 gap-8 items-center">
-          <div className="md:col-span-5 rounded-2xl overflow-hidden shadow-lg border-2 border-[#2596be]/20 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 p-2 transition-colors">
-            <img 
-              src={historyData.section2Image} 
-              alt="Historical Team" 
-              className="w-full h-72 object-cover rounded-xl"
-            />
-            {historyData.section2Caption && (
-              <p className="text-center text-xs text-neutral-500 dark:text-neutral-400 mt-2 font-medium">
-                {historyData.section2Caption}
-              </p>
-            )}
-          </div>
+                {/* قسم الوسائط (صورة أو فيديو) */}
+                <div className={`md:col-span-5 rounded-2xl overflow-hidden shadow-lg border-2 border-[#2596be]/20 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 p-2 order-1 w-full mx-auto transition-colors ${isReverse ? 'md:order-1' : 'md:order-2'}`}>
+                  {isVideoFile(section.media) ? (
+                    <video 
+                      src={getMediaUrl(section.media)} 
+                      autoPlay 
+                      loop 
+                      muted 
+                      playsInline 
+                      className="w-full h-72 md:h-96 object-contain rounded-xl"
+                    />
+                  ) : (
+                    <img 
+                      src={getMediaUrl(section.media)} 
+                      alt={`Historical Content ${index + 1}`} 
+                      className="w-full h-72 md:h-96 object-cover rounded-xl"
+                    />
+                  )}
+                  {section.caption && (
+                    <p className="text-center text-xs text-neutral-500 dark:text-neutral-400 mt-2 font-medium">
+                      {section.caption}
+                    </p>
+                  )}
+                </div>
 
-          <div className="md:col-span-7 text-neutral-800 dark:text-neutral-200 text-lg leading-relaxed space-y-4 font-medium text-right">
-            {historyData.section2Text.map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
-          </div>
-        </div>
-
-        {/* Section 3: Iconic Matches & International Recognition */}
-        <div className="grid md:grid-cols-12 gap-8 items-center">
-          <div className="md:col-span-7 text-neutral-800 dark:text-neutral-200 text-lg leading-relaxed space-y-4 font-medium text-right order-2 md:order-1">
-            {historyData.section3Text.map((paragraph, index) => (
-              <p key={index}>{paragraph}</p>
-            ))}
-          </div>
-
-          <div className="md:col-span-5 rounded-2xl overflow-hidden shadow-lg border-2 border-[#2596be]/20 dark:border-neutral-800 bg-neutral-100 dark:bg-neutral-900 p-2 order-1 md:order-2 w-fit mx-auto transition-colors">
-            {historyData.section3Media && historyData.section3Media.endsWith('.mp4') ? (
-              <video 
-                src={historyData.section3Media} 
-                autoPlay 
-                loop 
-                muted 
-                playsInline 
-                className="w-full h-80 object-contain rounded-xl"
-              />
-            ) : (
-              <img 
-                src={historyData.section3Media} 
-                alt="Archive media" 
-                className="w-full h-80 object-cover rounded-xl"
-              />
-            )}
-            {historyData.section3Caption && (
-              <p className="text-center text-xs text-neutral-500 dark:text-neutral-400 mt-2 font-medium">
-                {historyData.section3Caption}
-              </p>
-            )}
-          </div>
-        </div>
-
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );

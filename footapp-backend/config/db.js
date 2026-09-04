@@ -145,6 +145,23 @@ async function initDB() {
             );
         `);
 
+
+
+        // Create posts table for club news and announcements
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS posts (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                title VARCHAR(255) NOT NULL,
+                content TEXT NOT NULL,
+                image VARCHAR(255),
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+        `);
+        console.log("Checked/Created posts table.");
+
+
+        
         // 10. Check if history table is empty, then seed initial default history content
         const [historyRows] = await pool.query('SELECT COUNT(*) as count FROM history');
         if (historyRows[0].count === 0) {

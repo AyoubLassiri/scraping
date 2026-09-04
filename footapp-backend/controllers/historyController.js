@@ -15,63 +15,39 @@ async function getHistory(req, res) {
     }
 }
 
-// Update history page content (Admin)
+// Update history page content (Dynamic Sections)
 async function updateHistory(req, res) {
     try {
-        const {
-            title,
-            section1Text,
-            section1Image,
-            section1Caption,
-            section2Text,
-            section2Image,
-            section2Caption,
-            section3Text,
-            section3Media,
-            section3Caption
-        } = req.body;
+        const { title, sections } = req.body;
+        
+        // تحويل مصفوفة الأقسام إلى نص JSON لحفظها في قاعدة البيانات
+        const sectionsJson = JSON.stringify(sections || []);
 
-        // Check if a record exists
+        // خدعة برمجية: محاولة إضافة عمود sections إلى الجدول في حال لم يكن موجوداً مسبقاً
+        try {
+            await db.query("ALTER TABLE history ADD COLUMN sections LONGTEXT");
+        } catch (e) {
+            // يتم تجاهل الخطأ إذا كان العمود موجوداً بالفعل
+        }
+
+        // Check if record exists
         const [rows] = await db.query('SELECT id FROM history ORDER BY id DESC LIMIT 1');
-
-        // Format array texts into JSON strings if they are arrays
-        const s1TextJson = JSON.stringify(section1Text);
-        const s2TextJson = JSON.stringify(section2Text);
-        const s3TextJson = JSON.stringify(section3Text);
 
         if (rows.length > 0) {
             const historyId = rows[0].id;
             await db.query(`
                 UPDATE history SET 
                     title = ?, 
-                    section1Text = ?, 
-                    section1Image = ?, 
-                    section1Caption = ?, 
-                    section2Text = ?, 
-                    section2Image = ?, 
-                    section2Caption = ?, 
-                    section3Text = ?, 
-                    section3Media = ?, 
-                    section3Caption = ?
+                    sections = ?
                 WHERE id = ?
-            `, [
-                title, s1TextJson, section1Image, section1Caption,
-                s2TextJson, section2Image, section2Caption,
-                s3TextJson, section3Media, section3Caption,
-                historyId
-            ]);
+            `, [title, sectionsJson, historyId]);
         } else {
             await db.query(`
                 INSERT INTO history (
-                    title, section1Text, section1Image, section1Caption, 
-                    section2Text, section2Image, section2Caption, 
-                    section3Text, section3Media, section3Caption
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-            `, [
-                title, s1TextJson, section1Image, section1Caption,
-                s2TextJson, section2Image, section2Caption,
-                s3TextJson, section3Media, section3Caption
-            ]);
+                    title, 
+                    sections
+                ) VALUES (?, ?)
+            `, [title, sectionsJson]);
         }
 
         res.json({ message: 'History content updated successfully' });

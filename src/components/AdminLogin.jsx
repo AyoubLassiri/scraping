@@ -38,32 +38,32 @@ export default function AdminLogin() {
   };
 
   return (
-    <div dir="rtl" className="min-h-screen bg-neutral-100 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-lg p-8">
-        <h2 className="text-xl font-bold text-neutral-900 mb-2 text-center">لوحة تحكم المشرف</h2>
-        <p className="text-xs text-neutral-500 mb-8 text-center">نادي مستقبل المرسى</p>
+    <div dir="rtl" className="min-h-screen bg-neutral-100 dark:bg-neutral-950 flex items-center justify-center px-4 transition-colors duration-300">
+      <div className="max-w-md w-full bg-white dark:bg-neutral-900 rounded-2xl shadow-lg dark:shadow-neutral-900/50 p-8 border border-neutral-200 dark:border-neutral-800 transition-colors">
+        <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2 text-center">لوحة تحكم المشرف</h2>
+        <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-8 text-center">نادي مستقبل المرسى</p>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 mb-1">اسم المستخدم</label>
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">اسم المستخدم</label>
             <input
               type="text"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               required
-              className="w-full border border-neutral-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-neutral-900"
+              className="w-full border border-neutral-300 dark:border-neutral-700 bg-transparent rounded-lg px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-white transition-colors"
               placeholder="أدخل اسم المستخدم"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-neutral-700 mb-1">كلمة المرور</label>
+            <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">كلمة المرور</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full border border-neutral-300 rounded-lg px-4 py-2.5 text-sm focus:outline-none focus:border-neutral-900"
+              className="w-full border border-neutral-300 dark:border-neutral-700 bg-transparent rounded-lg px-4 py-2.5 text-sm text-neutral-900 dark:text-neutral-100 focus:outline-none focus:border-neutral-900 dark:focus:border-white transition-colors"
               placeholder="أدخل كلمة المرور"
             />
           </div>
@@ -71,7 +71,7 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="mt-4 w-full bg-neutral-900 text-white font-semibold py-3 rounded-lg text-sm hover:bg-neutral-800 transition-colors disabled:bg-neutral-400"
+            className="mt-4 w-full bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 font-semibold py-3 rounded-lg text-sm hover:bg-neutral-800 dark:hover:bg-neutral-200 transition-colors disabled:bg-neutral-400 dark:disabled:bg-neutral-700"
           >
             {loading ? "جاري الدخول..." : "تسجيل الدخول"}
           </button>

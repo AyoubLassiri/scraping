@@ -15,6 +15,7 @@ import Checkout from "./components/Checkout";
 import AdminLogin from "./components/AdminLogin";
 import AdminDashboard from "./components/AdminDashboard";
 import PlayersPage from "./components/PlayersPage";
+import NewsPage from './components/NewsPage';
 
 
 
@@ -48,6 +49,7 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         
 <Route path="/players" element={<PlayersPage />} />
+<Route path="/news" element={<NewsPage />} />
       </Routes>
       <Footer />
     </Router>

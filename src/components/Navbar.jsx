@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Languages, ShoppingBag, Store, ShieldCheck, Shield, Moon, Sun } from "lucide-react";
+import { Languages, ShoppingBag, Store, ShieldCheck, Shield, Moon, Sun, Newspaper } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import logoImage from "../assets/logoMostakhbal.png";
 
 const NAV_LINKS = [
+  { name: "الأخبار", path: "/news" },
   { name: "الترتيب", path: "/standings" },
-  { name: "الماتشات", path: "/" },
+  { name: "الماتشات", path: "/standings" },
   { name: "الفرقة", path: "/players" },
   { name: "التاريخ", path: "/history" },
   { name: "الحانوت", path: "/store" },
@@ -135,6 +136,7 @@ export default function Navbar() {
               onClick={() => setMenuOpen(false)} 
               className="text-white/90 hover:text-white py-1 flex items-center gap-2"
             >
+              {item.path === '/news' && <Newspaper size={16} />}
               {item.path === '/store' && <Store size={16} />}
               {item.path === '/players' && <Shield size={16} />}
               {item.name}
