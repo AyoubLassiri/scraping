@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
-import heroImage from "../assets/championsheroimage.jpg";
 import logoMostakhbal from "../assets/logoMostakhbal.png";
 
 function TeamBadge({ initials, logoLight, logoDark, big }) {
@@ -42,9 +42,11 @@ function TeamBadge({ initials, logoLight, logoDark, big }) {
 }
 
 export default function HomeHeader() {
+  const [heroBg, setHeroBg] = useState(null);
+
   const [lastMatch, setLastMatch] = useState({
-    homeTeam: "نادي مستقبل المرسى",
-    homeInitials: "CMM",
+    homeTeam: "نادي مستقبل المرسى العيون",
+    homeInitials: "cmml",
     homeLogoLight: "https://cdn.phototourl.com/free/2026-09-02-75c3ccb6-f7bf-4c50-92cc-33bba9d26a6f.png",
     awayTeam: "خصم الجولة",
     awayInitials: "OPP",
@@ -54,14 +56,25 @@ export default function HomeHeader() {
   });
 
   const [nextMatch, setNextMatch] = useState({
-    homeTeam: "نادي مستقبل المرسى",
-    homeInitials: "CMM",
+    homeTeam: "نادي مستقبل المرسى العيون",
+    homeInitials: "cmml",
     homeLogoLight: "https://cdn.phototourl.com/free/2026-09-02-75c3ccb6-f7bf-4c50-92cc-33bba9d26a6f.png",
     awayTeam: "المنافس القادم",
     awayInitials: "OPP",
     awayLogoLight: "",
     date: "قريباً"
   });
+
+  useEffect(() => {
+    fetch('https://backend.mostakbalelmarsa.com/api/hero')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.image) {
+          setHeroBg(`https://backend.mostakbalelmarsa.com${data.image}`);
+        }
+      })
+      .catch((err) => console.log('Using default hero image:', err));
+  }, []);
 
   useEffect(() => {
     fetch('/matches.json')
@@ -101,18 +114,20 @@ export default function HomeHeader() {
 
       {/* Hero Section */}
       <section className="relative h-[420px] sm:h-[520px] overflow-hidden bg-neutral-900">
-        <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{ backgroundImage: `url(${heroImage})` }}
-        />
+        {heroBg && (
+          <div
+            className="absolute inset-0 bg-cover bg-center transition-[background-image] duration-500"
+            style={{ backgroundImage: `url(${heroBg})` }}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-[#2596be]/40 to-[#2596be]/70 dark:via-neutral-900/60 dark:to-neutral-950/90 transition-colors" />
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
         <div className="relative h-full flex flex-col items-center justify-end text-center pb-12 px-4">
           <span className="inline-block bg-[#2596be] dark:bg-sky-600 text-white text-sm sm:text-base font-semibold rounded-full px-5 py-2 mb-4 shadow-md">
-            مرحباً بكم في الموقع غير الرسمي ديال
+            مرحباً بكم في الموقع الرسمي ديال
           </span>
-          <h1 className="text-white text-3xl sm:text-5xl font-extrabold tracking-tight">
+         <h1 className="text-white text-3xl sm:text-5xl font-extrabold tracking-tight">
             نادي مستقبل المرسى العيون لكرة القدم
           </h1>
         </div>
@@ -127,7 +142,10 @@ export default function HomeHeader() {
             <h2 className="text-center text-[#2596be] dark:text-sky-400 text-xl sm:text-2xl font-bold pb-4">
               النتيجة الأخيرة
             </h2>
-            <div className="relative bg-[#2596be] dark:bg-neutral-900 rounded-2xl shadow-md h-40 flex flex-col items-center justify-center gap-3 overflow-hidden border border-transparent dark:border-neutral-800 transition-colors">
+            <Link
+              to="/standings"
+              className="relative bg-[#2596be] dark:bg-neutral-900 rounded-2xl shadow-md h-40 flex flex-col items-center justify-center gap-3 overflow-hidden border border-transparent dark:border-neutral-800 transition-colors hover:brightness-110 active:scale-[0.99] cursor-pointer"
+            >
               <div
                 aria-hidden="true"
                 className="absolute -right-10 -bottom-10 w-52 h-52 rounded-full border-[18px] border-white/10 dark:border-white/5"
@@ -162,7 +180,7 @@ export default function HomeHeader() {
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
 
           {/* Right Container: Next Match */}
@@ -170,7 +188,10 @@ export default function HomeHeader() {
             <h2 className="text-center text-[#2596be] dark:text-sky-400 text-xl sm:text-2xl font-bold pb-4">
               المباراة القادمة
             </h2>
-            <div className="relative bg-[#2596be] dark:bg-neutral-900 rounded-2xl shadow-md h-40 flex flex-col items-center justify-center gap-3 overflow-hidden border border-transparent dark:border-neutral-800 transition-colors">
+            <Link
+              to="/standings"
+              className="relative bg-[#2596be] dark:bg-neutral-900 rounded-2xl shadow-md h-40 flex flex-col items-center justify-center gap-3 overflow-hidden border border-transparent dark:border-neutral-800 transition-colors hover:brightness-110 active:scale-[0.99] cursor-pointer"
+            >
               <div
                 aria-hidden="true"
                 className="absolute -left-10 -bottom-10 w-52 h-52 rounded-full border-[18px] border-white/10 dark:border-white/5"
@@ -205,7 +226,7 @@ export default function HomeHeader() {
                   </span>
                 </div>
               </div>
-            </div>
+            </Link>
           </div>
 
         </div>

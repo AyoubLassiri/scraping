@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { Trash2, Plus, LogOut, Package, ShoppingCart, Edit, X, Users, Shield, BookOpen, Newspaper } from "lucide-react";
+import { Trash2, Plus, LogOut, Package, ShoppingCart, Edit, X, Users, Shield, BookOpen, Newspaper, MessageSquare, Image as ImageIcon } from "lucide-react";
 import AdminHistory from "./AdminHistory";
+import AdminComplaints from "./AdminComplaints";
+import AdminHero from "./AdminHero";
 
 export default function AdminDashboard() {
-  const [activeTab, setActiveTab] = useState("orders"); // orders | products | staff | players | history | posts
+  const [activeTab, setActiveTab] = useState("orders"); // orders | products | staff | players | history | posts | complaints
   const [orders, setOrders] = useState([]);
+  const [complaintsCount, setComplaintsCount] = useState(0);
   const [products, setProducts] = useState([]);
   const [staffList, setStaffList] = useState([]);
   const [players, setPlayers] = useState([]);
@@ -68,14 +71,17 @@ export default function AdminDashboard() {
   const fetchData = async () => {
     setLoading(true);
     try {
-      const [ordersRes, productsRes, staffRes, playersRes, postsRes] = await Promise.all([
-        fetch("http://localhost:5000/api/admin/orders", {
+      const [ordersRes, productsRes, staffRes, playersRes, postsRes, complaintsRes] = await Promise.all([
+        fetch("https://backend.mostakbalelmarsa.com/api/admin/orders", {
           headers: { Authorization: `Bearer ${token}` },
         }),
-        fetch("http://localhost:5000/api/products"),
-        fetch("http://localhost:5000/api/staff"),
-        fetch("http://localhost:5000/api/players"),
-        fetch("http://localhost:5000/api/posts"),
+        fetch("https://backend.mostakbalelmarsa.com/api/products"),
+        fetch("https://backend.mostakbalelmarsa.com/api/staff"),
+        fetch("https://backend.mostakbalelmarsa.com/api/players"),
+        fetch("https://backend.mostakbalelmarsa.com/api/posts"),
+        fetch("https://backend.mostakbalelmarsa.com/api/complaints", {
+          headers: { Authorization: `Bearer ${token}` },
+        }),
       ]);
 
       if (ordersRes.status === 401 || ordersRes.status === 403) {
@@ -93,12 +99,13 @@ export default function AdminDashboard() {
         return res.json();
       };
 
-      const [ordersData, productsData, staffData, playersData, postsData] = await Promise.all([
+      const [ordersData, productsData, staffData, playersData, postsData, complaintsData] = await Promise.all([
         safeJson(ordersRes, "orders"),
         safeJson(productsRes, "products"),
         safeJson(staffRes, "staff"),
         safeJson(playersRes, "players"),
         safeJson(postsRes, "posts"),
+        safeJson(complaintsRes, "complaints"),
       ]);
 
       setOrders(ordersData);
@@ -106,6 +113,7 @@ export default function AdminDashboard() {
       setStaffList(Array.isArray(staffData) ? staffData : []);
       setPlayers(Array.isArray(playersData) ? playersData : []);
       setPosts(Array.isArray(postsData) ? postsData : []);
+      setComplaintsCount(Array.isArray(complaintsData) ? complaintsData.length : 0);
     } catch (err) {
       console.error(err);
       toast.error("فشل في تحميل بيانات لوحة التحكم");
@@ -119,7 +127,7 @@ export default function AdminDashboard() {
     if (!window.confirm("هل أنت متأكد من حذف هذا المنتج؟")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/products/${id}`, {
+      const res = await fetch(`https://backend.mostakbalelmarsa.com/api/products/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -213,8 +221,8 @@ export default function AdminDashboard() {
       }
 
       const url = editingId 
-        ? `http://localhost:5000/api/products/${editingId}`
-        : "http://localhost:5000/api/products";
+        ? `https://backend.mostakbalelmarsa.com/api/products/${editingId}`
+        : "https://backend.mostakbalelmarsa.com/api/products";
       
       const method = editingId ? "PUT" : "POST";
 
@@ -269,7 +277,7 @@ export default function AdminDashboard() {
     if (!window.confirm("هل أنت متأكد من حذف عضو الطاقم هذا؟")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/staff/${id}`, {
+      const res = await fetch(`https://backend.mostakbalelmarsa.com/api/staff/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -301,8 +309,8 @@ export default function AdminDashboard() {
       }
 
       const url = editingStaffId 
-        ? `http://localhost:5000/api/staff/${editingStaffId}`
-        : "http://localhost:5000/api/staff";
+        ? `https://backend.mostakbalelmarsa.com/api/staff/${editingStaffId}`
+        : "https://backend.mostakbalelmarsa.com/api/staff";
       
       const method = editingStaffId ? "PUT" : "POST";
 
@@ -360,7 +368,7 @@ export default function AdminDashboard() {
     if (!window.confirm("هل أنت متأكد من حذف هذا اللاعب؟")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/players/${id}`, {
+      const res = await fetch(`https://backend.mostakbalelmarsa.com/api/players/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -393,8 +401,8 @@ export default function AdminDashboard() {
       }
 
       const url = editingPlayerId 
-        ? `http://localhost:5000/api/players/${editingPlayerId}`
-        : "http://localhost:5000/api/players";
+        ? `https://backend.mostakbalelmarsa.com/api/players/${editingPlayerId}`
+        : "https://backend.mostakbalelmarsa.com/api/players";
       
       const method = editingPlayerId ? "PUT" : "POST";
 
@@ -445,7 +453,7 @@ export default function AdminDashboard() {
     if (!window.confirm("هل أنت متأكد من حذف هذا الخبر؟")) return;
 
     try {
-      const res = await fetch(`http://localhost:5000/api/posts/${id}`, {
+      const res = await fetch(`https://backend.mostakbalelmarsa.com/api/posts/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -476,8 +484,8 @@ export default function AdminDashboard() {
       }
 
       const url = editingPostId 
-        ? `http://localhost:5000/api/posts/${editingPostId}`
-        : "http://localhost:5000/api/posts";
+        ? `https://backend.mostakbalelmarsa.com/api/posts/${editingPostId}`
+        : "https://backend.mostakbalelmarsa.com/api/posts";
       
       const method = editingPostId ? "PUT" : "POST";
 
@@ -576,9 +584,27 @@ export default function AdminDashboard() {
             <Newspaper size={18} />
             إدارة الأخبار ({posts.length})
           </button>
+          <button
+            onClick={() => setActiveTab("complaints")}
+            className={`flex items-center gap-2 text-sm font-semibold pb-3 border-b-2 transition-colors whitespace-nowrap ${
+              activeTab === "complaints" ? "border-neutral-900 dark:border-white text-neutral-900 dark:text-white" : "border-transparent text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+            }`}
+          >
+            <MessageSquare size={18} />
+            الشكاوى ({complaintsCount})
+          </button>
+          <button
+            onClick={() => setActiveTab("hero")}
+            className={`flex items-center gap-2 text-sm font-semibold pb-3 border-b-2 transition-colors whitespace-nowrap ${
+              activeTab === "hero" ? "border-neutral-900 dark:border-white text-neutral-900 dark:text-white" : "border-transparent text-neutral-400 dark:text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+            }`}
+          >
+            <ImageIcon size={18} />
+            صورة الواجهة
+          </button>
         </div>
 
-        {loading && activeTab !== "history" ? (
+        {loading && activeTab !== "history" && activeTab !== "hero" && activeTab !== "complaints" ? (
           <div className="text-center py-20 text-neutral-400 text-sm">جاري تحميل البيانات...</div>
         ) : activeTab === "orders" ? (
           /* ORDERS TAB */
@@ -1035,6 +1061,12 @@ export default function AdminDashboard() {
         ) : activeTab === "history" ? (
           /* HISTORY TAB */
           <AdminHistory />
+        ) : activeTab === "complaints" ? (
+          /* COMPLAINTS TAB */
+          <AdminComplaints />
+        ) : activeTab === "hero" ? (
+          /* HERO IMAGE TAB */
+          <AdminHero />
         ) : activeTab === "posts" ? (
           /* POSTS TAB CONTENT */
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -1068,7 +1100,7 @@ export default function AdminDashboard() {
                   />
                   {postImagePreview && (
                     <div className="w-full h-32 bg-neutral-100 dark:bg-neutral-800 rounded-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden mt-2 relative shadow-sm">
-                      <img src={postImagePreview.startsWith("blob:") || postImagePreview.startsWith("http") ? postImagePreview : `http://localhost:5000${postImagePreview}`} alt="معاينة" className="w-full h-full object-cover" />
+                      <img src={postImagePreview.startsWith("blob:") || postImagePreview.startsWith("http") ? postImagePreview : `https://backend.mostakbalelmarsa.com${postImagePreview}`} alt="معاينة" className="w-full h-full object-cover" />
                     </div>
                   )}
                 </div>
@@ -1100,7 +1132,7 @@ export default function AdminDashboard() {
                       <div className="flex items-center gap-4">
                         <div className="w-20 h-16 bg-neutral-100 dark:bg-neutral-800 rounded-lg flex items-center justify-center overflow-hidden shrink-0 border border-neutral-200 dark:border-neutral-700">
                           {post.image ? (
-                            <img src={post.image.startsWith("http") ? post.image : `http://localhost:5000${post.image}`} alt={post.title} className="w-full h-full object-cover" />
+                            <img src={post.image.startsWith("http") ? post.image : `https://backend.mostakbalelmarsa.com${post.image}`} alt={post.title} className="w-full h-full object-cover" />
                           ) : (
                             <Newspaper size={20} className="text-neutral-400" />
                           )}

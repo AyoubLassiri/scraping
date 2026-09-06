@@ -38,7 +38,7 @@ export default function Store() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch("https://backend.mostakbalelmarsa.com/api/products")
       .then((res) => res.json())
       .then((data) => {
         // Handle MySQL JSON columns if returned as strings

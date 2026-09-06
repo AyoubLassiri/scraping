@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Calendar, List } from "lucide-react";
 
 export default function Standings() {
@@ -62,10 +63,13 @@ export default function Standings() {
       <div className="max-w-5xl mx-auto px-4 flex flex-col items-center">
         
         {/* Top Button */}
-        <button className="flex items-center gap-2 bg-[#2596be] text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1e7b9e] transition-colors mb-10 shadow-sm">
+        <Link
+          to="/standings"
+          className="flex items-center gap-2 bg-[#2596be] text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1e7b9e] transition-colors mb-10 shadow-sm"
+        >
           <Calendar size={18} />
           الماتشات الكاملين
-        </button>
+        </Link>
 
         {/* Section Title */}
         <h2 className="text-3xl font-medium text-[#2596be] dark:text-sky-400 mb-8">
@@ -102,8 +106,8 @@ export default function Standings() {
                         isMyTeam
                           ? "bg-[#2596be] text-white font-bold hover:bg-[#1e7b9e]"
                           : row.rank % 2 === 0
-                          ? "bg-neutral-100 dark:bg-neutral-850 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-800"
-                          : "bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-850"
+                          ? "bg-neutral-100 dark:bg-neutral-800 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-200 dark:hover:bg-neutral-700"
+                          : "bg-white dark:bg-neutral-900 text-neutral-800 dark:text-neutral-200 hover:bg-neutral-100 dark:hover:bg-neutral-800"
                       }`}
                     >
                       <td className="py-3">{row.rank}</td>
@@ -149,13 +153,13 @@ export default function Standings() {
         </div>
 
         {/* Bottom Button */}
-        <a 
-          href="/standings" 
+        <Link
+          to="/standings"
           className="flex items-center gap-2 bg-[#2596be] text-white px-6 py-2.5 rounded-lg font-bold text-sm hover:bg-[#1e7b9e] transition-colors mt-8 shadow-sm"
         >
           <List size={18} />
           الترتيب الكامل
-        </a>
+        </Link>
         
       </div>
     </section>

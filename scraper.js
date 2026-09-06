@@ -21,7 +21,8 @@ const teamLogosMap = {
     "شباب الفتح البيضاوي CCFAC": "https://howatpress.net/wp-content/uploads/2021/04/%D8%B4%D8%A8%D8%A7%D8%A8-%D8%A7%D9%84%D9%81%D8%AA%D8%AD-%D8%A7%D9%84%D8%A8%D9%8A%D8%B6%D8%A7%D9%88%D9%8A-CCFAC.jpg",
     "شباب هوارة CCH": "https://howatpress.net/wp-content/uploads/2021/04/cch.png",
     "مولودية آسا AMSA": "https://howatpress.net/wp-content/uploads/2021/04/%D9%85%D9%88%D9%84%D9%88%D8%AF%D9%8A%D8%A9-%D8%A2%D8%B3%D8%A7-AMSA.jpg",
-    "نادي مستقبل المرسى CMM": "https://cdn.phototourl.com/free/2026-09-02-c36c80af-e062-4b96-aee3-a09761dbe977.png"
+"نادي مستقبل المرسى CMM": "https://cdn.phototourl.com/free/2026-09-02-c36c80af-e062-4b96-aee3-a09761dbe977.png",
+    "نادي وفا وداد CWW": "https://howatpress.net/wp-content/uploads/2021/04/IMG-20260901-WA0052.jpg"
 };
 
 async function scrapeData() {
@@ -37,34 +38,47 @@ async function scrapeData() {
 
         const $ = cheerio.load(data);
         const standingsData = [];
-        const teamKeywords = Object.keys(teamLogosMap).sort((a, b) => b.length - a.length);
 
-        // 1. Scrape Standings Table
-        $('table tr, tbody tr').each((index, element) => {
-            const rowText = $(element).text().trim();
+        // 1. Scrape Standings Table — read position & team name directly from each row
+        $('tr').each((index, element) => {
+            const cells = $(element).find('td');
+            if (cells.length < 2) return; // skip header rows or unrelated rows
 
-            for (let keyword of teamKeywords) {
-                if (rowText.includes(keyword)) {
-                    const teamName = $(element).find('td').eq(1).text().trim() || keyword;
-                    const logoUrl = teamLogosMap[keyword] || "";
+            const position = parseInt($(cells[0]).text().trim(), 10);
+            if (isNaN(position)) return; // not a real standings row
 
-                    const logoAlreadyExists = standingsData.some(t => t.logo === logoUrl && logoUrl !== "");
-                    const nameAlreadyExists = standingsData.some(t => t.team_name === teamName);
+            const teamLink = $(element).find('a[href*="/team/"]').first();
+            const teamName = (teamLink.length ? teamLink.text() : $(cells[1]).text()).trim();
+            if (!teamName) return;
 
-                    if (!nameAlreadyExists && !logoAlreadyExists && standingsData.length < 16) {
-                        standingsData.push({
-                            position: standingsData.length + 1,
-                            team_name: teamName,
-                            logo: logoUrl
-                        });
-                        break;
-                    }
-                }
+            const alreadyExists = standingsData.some(
+                (t) => t.position === position || t.team_name === teamName
+            );
+            if (alreadyExists) return;
+
+            let logoUrl = teamLogosMap[teamName];
+            if (!logoUrl) {
+                const normalize = (s) => s.replace(/\s+/g, ' ').trim().toLowerCase();
+                const normName = normalize(teamName);
+                const matchKey = Object.keys(teamLogosMap).find((key) => {
+                    const normKey = normalize(key);
+                    return normName.includes(normKey) || normKey.includes(normName);
+                });
+                logoUrl = matchKey ? teamLogosMap[matchKey] : "";
             }
+
+            standingsData.push({
+                position,
+                team_name: teamName,
+                logo: logoUrl
+            });
         });
 
+        // Ensure correct order regardless of DOM traversal order
+        standingsData.sort((a, b) => a.position - b.position);
+
         fs.writeFileSync(
-            path.join(__dirname, 'public', 'standings.json'), 
+            '/home/footapp/build/standings.json',
             JSON.stringify(standingsData, null, 4), 
             'utf-8'
         );
@@ -73,7 +87,7 @@ async function scrapeData() {
         const matchLines = [];
         $('tr, div, li, p').each((i, el) => {
             const text = $(el).text().trim();
-            if (text.includes('مستقبل المرسى') || text.includes('CMM')) {
+            if (text.includes('مستقبل المرسى') || text.includes('cmml')) {
                 matchLines.push(text);
             }
         });
@@ -107,7 +121,7 @@ async function scrapeData() {
         }];
 
         fs.writeFileSync(
-            path.join(__dirname, 'public', 'matches.json'), 
+            '/home/footapp/build/matches.json',
             JSON.stringify(formattedMatches, null, 4), 
             'utf-8'
         );

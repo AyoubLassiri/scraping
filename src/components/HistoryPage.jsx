@@ -4,13 +4,13 @@ import logoImage from "../assets/logoMostakhbal.png";
 
 export default function HistoryPage() {
   const [historyData, setHistoryData] = useState({
-    title: "التاريخ ديال نادي مستقبل المرسى الرياضي",
+    title: "التاريخ ديال نادي مستقبل المرسى العيون الرياضي",
     sections: []
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/history")
+    fetch("https://backend.mostakbalelmarsa.com/api/history")
       .then((res) => res.json())
       .then((data) => {
         if (data && !data.error) {
@@ -27,7 +27,7 @@ export default function HistoryPage() {
           }
 
           setHistoryData({
-            title: data.title || "تاريخ نادي مستقبل المرسى الرياضي",
+            title: data.title || "تاريخ نادي مستقبل المرسى العيون الرياضي",
             sections: Array.isArray(parsedSections) ? parsedSections : []
           });
         }
@@ -44,7 +44,7 @@ export default function HistoryPage() {
     if (path.startsWith("http") || path.startsWith("blob:") || path.startsWith("data:")) {
       return path;
     }
-    return `http://localhost:5000${path}`;
+    return `https://backend.mostakbalelmarsa.com${path}`;
   };
 
   const isVideoFile = (url) => {

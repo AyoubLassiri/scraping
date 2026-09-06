@@ -9,7 +9,7 @@ export default function NewsPage() {
   const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/posts")
+    fetch("https://backend.mostakbalelmarsa.com/api/posts")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data)) {
@@ -26,7 +26,7 @@ export default function NewsPage() {
   const getMediaUrl = (path) => {
     if (!path) return null;
     if (path.startsWith("http") || path.startsWith("blob:") || path.startsWith("data:")) return path;
-    return `http://localhost:5000${path}`;
+    return `https://backend.mostakbalelmarsa.com${path}`;
   };
 
   // Prevent scrolling when modal is open

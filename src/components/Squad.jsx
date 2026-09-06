@@ -18,7 +18,7 @@ export default function Squad() {
   const [squadData, setSquadData] = useState(DEFAULT_SQUAD);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/players")
+    fetch("https://backend.mostakbalelmarsa.com/api/players")
       .then((res) => res.json())
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {

@@ -13,7 +13,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/admin/login", {
+      const response = await fetch("https://backend.mostakbalelmarsa.com/api/admin/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ username, password }),
@@ -41,8 +41,7 @@ export default function AdminLogin() {
     <div dir="rtl" className="min-h-screen bg-neutral-100 dark:bg-neutral-950 flex items-center justify-center px-4 transition-colors duration-300">
       <div className="max-w-md w-full bg-white dark:bg-neutral-900 rounded-2xl shadow-lg dark:shadow-neutral-900/50 p-8 border border-neutral-200 dark:border-neutral-800 transition-colors">
         <h2 className="text-xl font-bold text-neutral-900 dark:text-neutral-100 mb-2 text-center">لوحة تحكم المشرف</h2>
-        <p className="text-xs text-neutral-500 dark:text-neutral-400 mb-8 text-center">نادي مستقبل المرسى</p>
-
+<p className="text-xs text-neutral-500 dark:text-neutral-400 mb-8 text-center">نادي مستقبل المرسى العيون</p>
         <form onSubmit={handleLogin} className="flex flex-col gap-4">
           <div>
             <label className="block text-xs font-semibold text-neutral-700 dark:text-neutral-300 mb-1">اسم المستخدم</label>

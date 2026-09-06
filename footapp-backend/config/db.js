@@ -147,6 +147,22 @@ async function initDB() {
 
 
 
+        // Create hero_settings table for the homepage hero background image (single row, id=1)
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS hero_settings (
+                id INT PRIMARY KEY DEFAULT 1,
+                image VARCHAR(255),
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+        `);
+
+        // Seed the single settings row if it doesn't exist yet
+        const [heroRows] = await pool.query('SELECT COUNT(*) as count FROM hero_settings');
+        if (heroRows[0].count === 0) {
+            await pool.query('INSERT INTO hero_settings (id, image) VALUES (1, NULL)');
+            console.log("Seeded initial hero_settings row.");
+        }
+
         // Create posts table for club news and announcements
         await pool.query(`
             CREATE TABLE IF NOT EXISTS posts (
@@ -172,12 +188,12 @@ async function initDB() {
                     section3Text, section3Media, section3Caption
                 ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             `, [
-                'التاريخ ديال نادي مستقبل المرسى الرياضي',
+                'التاريخ ديال نادي مستقبل المرسى العيون الرياضي',
                 JSON.stringify([
-                    'نادي مستقبل المرسى الرياضي هو فخر المنطقة ورمز الرياضة المحلية في مدينة العيون، حيث تأسس بهدف تأطير الشباب وتطوير كرة القدم المحلية وتمثيل المدينة بأفضل حلة.',
-                    'يمتاز الفريق بألوانه المميزة وروح القتالية العالية للاعبي وجماهير النادي، مع حضور قوي ودعم مستمر في كل المباريات والمنافسات المحلية والجهوية.',
-                    'تأسس النادي بفضل جهود ثلة من الغيورين والمؤسسين الأبطال، على رأسهم المرحوم بدر المساوي، ليكون منصة حقيقية لصقل المواهب الكروية الشابة وإعطاء الإشعاع الرياضي للمنطقة.'
-                ]),
+  'نادي مستقبل المرسى العيون الرياضي هو فخر المنطقة ورمز الرياضة المحلية في مدينة العيون، حيث تأسس بهدف تأطير الشباب وتطوير كرة القدم المحلية وتمثيل المدينة بأفضل حلة.',
+  'يمتاز الفريق بألوانه المميزة وروح القتالية العالية للاعبي وجماهير النادي، مع حضور قوي ودعم مستمر في كل المباريات والمنافسات المحلية والجهوية.',
+  'تأسس النادي بفضل جهود ثلة من الغيورين والمؤسسين الأبطال، على رأسهم المرحوم بدر المساوي، ليكون منصة حقيقية لصقل المواهب الكروية الشابة وإعطاء الإشعاع الرياضي للمنطقة.'
+]),
                 '/src/assets/president.jpg',
                 'بدر المساوي — المؤسس والرئيس الأول في تاريخ النادي',
                 JSON.stringify([
@@ -201,33 +217,33 @@ async function initDB() {
         if (rows[0].count === 0) {
             const initialProducts = [
                 [
-                    'cmm-home-jersey-26',
+                    'cmml-home-jersey-26',
                     'القميص الرسمي الأساسي لمستقبل المرسى 2026',
                     150.00,
                     'القميص الرسمي للموسم الجديد. يتميز بنسيج رياضي عالي الجودة ومضاد للتعرق، مع تصميم يبرز هوية النادي وألوانه التاريخية.',
-                    JSON.stringify(['https://howatpress.net/wp-content/uploads/2024/03/cmm.jpg']),
+                    JSON.stringify(['https://howatpress.net/wp-content/uploads/2024/03/cmml.jpg']),
                     JSON.stringify(['S', 'M', 'L', 'XL', 'XXL']),
                     true,
                     'none',
                     0.00
                 ],
                 [
-                    'cmm-training-shirt-26',
+                    'cmml-training-shirt-26',
                     'قميص التداريب الرسمي',
                     120.00,
                     'قميص التداريب خفيف الوزن مصمم لتوفير أقصى درجات الراحة أثناء الأداء الرياضي.',
-                    JSON.stringify(['https://howatpress.net/wp-content/uploads/2024/03/cmm.jpg']),
+                    JSON.stringify(['https://howatpress.net/wp-content/uploads/2024/03/cmml.jpg']),
                     JSON.stringify(['M', 'L', 'XL']),
                     true,
                     'none',
                     0.00
                 ],
                 [
-                    'cmm-scarf-26',
+                    'cmml-scarf-26',
                     'وشاح النادي (شال)',
                     80.00,
                     'وشاح شتوي دافئ يحمل ألوان وشعار نادي مستقبل المرسى. مثالي لدعم الفريق في المباريات الباردة.',
-                    JSON.stringify(['https://howatpress.net/wp-content/uploads/2024/03/cmm.jpg']),
+                    JSON.stringify(['https://howatpress.net/wp-content/uploads/2024/03/cmml.jpg']),
                     JSON.stringify(['مقاس موحد']),
                     false,
                     'none',
@@ -240,6 +256,20 @@ async function initDB() {
                 [initialProducts]
             );
         }
+
+        // Create complaints table for client feedback/complaints submitted from footer
+await pool.query(`
+    CREATE TABLE IF NOT EXISTS complaints (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        name VARCHAR(100) NOT NULL,
+        email VARCHAR(150),
+        phone VARCHAR(50),
+        message TEXT NOT NULL,
+        status VARCHAR(50) DEFAULT 'New',
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    );
+`);
+console.log("Checked/Created complaints table.");
 
         // 12. Check if admins table is empty, then create default admin
         const [adminRows] = await pool.query('SELECT COUNT(*) as count FROM admins');

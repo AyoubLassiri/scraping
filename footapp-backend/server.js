@@ -20,9 +20,11 @@ const staffRoutes = require('./routes/staffRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const adminOrderRoutes = require('./routes/adminOrderRoutes');
 const playerRoutes = require('./routes/playerRoutes');
+const complaintRoutes = require('./routes/complaintRoutes');
 const historyRoutes = require('./routes/historyRoutes');
 // Add this to your route imports
 const postRoutes = require('./routes/postRoutes');
+const heroRoutes = require('./routes/heroRoutes');
 
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
@@ -31,6 +33,8 @@ app.use('/api/admin/orders', adminOrderRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/players', playerRoutes);
 app.use('/api/history', historyRoutes);
+app.use('/api/complaints', complaintRoutes);
+app.use('/api/hero', heroRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 

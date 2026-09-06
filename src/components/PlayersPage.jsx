@@ -11,8 +11,8 @@ export default function PlayersPage() {
 
   useEffect(() => {
     Promise.all([
-      fetch("http://localhost:5000/api/players").then((res) => res.json()),
-      fetch("http://localhost:5000/api/staff").then((res) => res.json()),
+      fetch("https://backend.mostakbalelmarsa.com/api/players").then((res) => res.json()),
+      fetch("https://backend.mostakbalelmarsa.com/api/staff").then((res) => res.json()),
     ])
       .then(([playersData, staffData]) => {
         setPlayers(Array.isArray(playersData) ? playersData : []);
@@ -45,8 +45,7 @@ export default function PlayersPage() {
               <Shield size={16} className="text-white" />
               الموسم الرياضي الرسمي 2026
             </div>
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">عائلة نادي مستقبل المرسى</h1>
-            <p className="text-xs sm:text-sm text-white/90 max-w-xl leading-relaxed">
+<h1 className="text-3xl sm:text-4xl font-black tracking-tight mb-2">عائلة نادي مستقبل المرسى العيون</h1>            <p className="text-xs sm:text-sm text-white/90 max-w-xl leading-relaxed">
               تعرف عن قرب على تشكيلة الأبطال من لاعبين وأطر تقنية وإدارية الذين يحملون قميص وراية النادي بكل فخر واعتزاز.
             </p>
           </div>
@@ -220,9 +219,9 @@ export default function PlayersPage() {
         )}
       </main>
 
-      <footer className="bg-white dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 py-8 text-center text-xs text-neutral-500 dark:text-neutral-400 mt-auto transition-colors">
-        نادي مستقبل المرسى — جميع الحقوق محفوظة {new Date().getFullYear()}
-      </footer>
+<footer className="bg-white dark:bg-neutral-950 border-t border-neutral-200 dark:border-neutral-800 py-8 text-center text-xs text-neutral-500 dark:text-neutral-400 mt-auto transition-colors">
+  نادي مستقبل المرسى العيون — جميع الحقوق محفوظة {new Date().getFullYear()}
+</footer>
     </div>
   );
 }

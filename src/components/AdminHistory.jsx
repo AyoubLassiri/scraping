@@ -5,15 +5,15 @@ import { Save, Plus, Trash2, Upload, X } from "lucide-react";
 export default function AdminHistory() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  const [title, setTitle] = useState("التاريخ ديال نادي مستقبل المرسى الرياضي");
+  const [title, setTitle] = useState("التاريخ ديال نادي مستقبل المرسى العيون الرياضي");
   const [sections, setSections] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/history")
+    fetch("https://backend.mostakbalelmarsa.com/api/history")
       .then((res) => res.json())
       .then((data) => {
         if (data && !data.error) {
-          setTitle(data.title || "التاريخ ديال نادي مستقبل المرسى الرياضي");
+          setTitle(data.title || "التاريخ ديال نادي مستقبل المرسى العيون الرياضي");
           
           let parsedSections = [];
           if (data.sections) {
@@ -104,7 +104,7 @@ export default function AdminHistory() {
 
     const toastId = toast.loading("جاري رفع الملف...");
     try {
-      const res = await fetch("http://localhost:5000/api/history/upload", {
+      const res = await fetch("https://backend.mostakbalelmarsa.com/api/history/upload", {
         method: "POST",
         body: formData,
       });
@@ -129,7 +129,7 @@ export default function AdminHistory() {
     const toastId = toast.loading("جاري حفظ التعديلات...");
     
     try {
-      const res = await fetch("http://localhost:5000/api/history", {
+      const res = await fetch("https://backend.mostakbalelmarsa.com/api/history", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title, sections }),
@@ -216,9 +216,9 @@ export default function AdminHistory() {
                 {section.media && (
                   <div className="mt-3 h-32 w-48 rounded-lg border border-neutral-200 dark:border-neutral-700 overflow-hidden bg-neutral-100 dark:bg-neutral-800 flex items-center justify-center">
                     {section.media.includes('.mp4') || section.media.includes('video') ? (
-                      <video src={section.media.startsWith('http') || section.media.startsWith('blob:') ? section.media : `http://localhost:5000${section.media}`} className="w-full h-full object-cover" />
+                      <video src={section.media.startsWith('http') || section.media.startsWith('blob:') ? section.media : `https://backend.mostakbalelmarsa.com${section.media}`} className="w-full h-full object-cover" />
                     ) : (
-                      <img src={section.media.startsWith('http') || section.media.startsWith('blob:') ? section.media : `http://localhost:5000${section.media}`} className="w-full h-full object-cover" />
+                      <img src={section.media.startsWith('http') || section.media.startsWith('blob:') ? section.media : `https://backend.mostakbalelmarsa.com${section.media}`} className="w-full h-full object-cover" />
                     )}
                   </div>
                 )}
