@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Navbar from "./Navbar";
 import logoImage from "../assets/logoMostakhbal.png";
-import { Calendar, ChevronLeft, X, Newspaper } from "lucide-react";
+import { Calendar, ChevronLeft, X, Newspaper, Share2, Check } from "lucide-react";
 
 export default function NewsPage() {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState(null);
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     fetch("https://backend.mostakbalelmarsa.com/api/posts")
@@ -38,6 +39,34 @@ export default function NewsPage() {
     }
   }, [selectedPost]);
 
+  // Share handler
+  const handleShare = async (post) => {
+    const shareUrl = `https://mostakbalelmarsa.com/news?post=${post.id}`;
+    const shareTitle = post.title;
+    const shareText = post.content?.slice(0, 100) + "...";
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl,
+        });
+      } catch (err) {
+        console.error("Share failed:", err);
+      }
+    } else {
+      try {
+        await navigator.clipboard.writeText(`${shareTitle}\n${shareUrl}`);
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (err) {
+        console.error("Copy failed:", err);
+        alert("تعذر نسخ الرابط. يرجى نسخه يدويًا: " + shareUrl);
+      }
+    }
+  };
+
   return (
     <div dir="rtl" className="w-full min-h-screen bg-neutral-50 dark:bg-neutral-950 font-sans text-neutral-900 dark:text-neutral-100 transition-colors duration-300 pt-16">
       
@@ -48,6 +77,9 @@ export default function NewsPage() {
       <div className="bg-[#2596be] dark:bg-neutral-900 text-white py-12 px-4 shadow-md relative overflow-hidden transition-colors">
         <div className="max-w-6xl mx-auto flex flex-col items-center text-center relative z-10">
           <img src={logoImage} alt="Club Logo" className="h-20 w-auto mb-4 object-contain drop-shadow-lg" />
+          <p className="text-white/80 text-xs sm:text-sm font-semibold mb-2 tracking-wide">
+            مرحباً بكم في نادي مستقبل المرسى العيون
+          </p>
           <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
             أخبار النادي
           </h1>
@@ -92,6 +124,17 @@ export default function NewsPage() {
                     <Calendar size={12} />
                     {new Date(post.created_at).toLocaleDateString("ar-MA")}
                   </div>
+                  {/* Share button on image overlay */}
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleShare(post);
+                    }}
+                    className="absolute bottom-4 left-4 bg-black/50 backdrop-blur-sm text-white rounded-full p-2 hover:bg-[#2596be] transition-colors shadow-lg"
+                    title="مشاركة"
+                  >
+                    <Share2 size={16} />
+                  </button>
                 </div>
 
                 {/* Card Content */}
@@ -104,10 +147,21 @@ export default function NewsPage() {
                   </p>
                   
                   {/* Read More Button */}
-                  <div className="mt-auto pt-4 border-t border-neutral-100 dark:border-neutral-800 flex justify-end">
+                  <div className="mt-auto pt-4 border-t border-neutral-100 dark:border-neutral-800 flex items-center justify-between">
                     <span className="text-[#2596be] font-bold text-sm flex items-center gap-1 group-hover:text-[#1a7192] transition-colors">
                       اقرأ المزيد <ChevronLeft size={16} className="transform group-hover:-translate-x-1 transition-transform" />
                     </span>
+                    {/* Additional share button at the bottom, optional */}
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleShare(post);
+                      }}
+                      className="text-neutral-500 hover:text-[#2596be] dark:text-neutral-400 dark:hover:text-[#2596be] transition-colors p-1 rounded-full"
+                      title="مشاركة"
+                    >
+                      <Share2 size={16} />
+                    </button>
                   </div>
                 </div>
               </div>
@@ -125,13 +179,22 @@ export default function NewsPage() {
           {/* Modal Content */}
           <div className="bg-white dark:bg-neutral-900 w-full max-w-3xl max-h-[90vh] rounded-2xl overflow-hidden shadow-2xl relative z-10 flex flex-col animate-in fade-in zoom-in-95 duration-200">
             
-            {/* Close Button */}
-            <button 
-              onClick={() => setSelectedPost(null)} 
-              className="absolute top-4 left-4 bg-black/50 text-white rounded-full p-2 hover:bg-red-600 transition-colors z-20 shadow-lg"
-            >
-              <X size={20} />
-            </button>
+            {/* Close and Share Buttons */}
+            <div className="absolute top-4 left-4 flex gap-2 z-20">
+              <button 
+                onClick={() => handleShare(selectedPost)}
+                className="bg-black/50 text-white rounded-full p-2 hover:bg-[#2596be] transition-colors shadow-lg"
+                title="مشاركة"
+              >
+                <Share2 size={18} />
+              </button>
+              <button 
+                onClick={() => setSelectedPost(null)} 
+                className="bg-black/50 text-white rounded-full p-2 hover:bg-red-600 transition-colors shadow-lg"
+              >
+                <X size={20} />
+              </button>
+            </div>
 
             {/* Scrollable Area */}
             <div className="overflow-y-auto flex-grow custom-scrollbar">
@@ -159,6 +222,14 @@ export default function NewsPage() {
               </div>
             </div>
           </div>
+        </div>
+      )}
+
+      {/* Copied feedback toast */}
+      {copied && (
+        <div className="fixed bottom-5 left-1/2 transform -translate-x-1/2 bg-neutral-800 text-white px-4 py-2 rounded-lg shadow-lg z-50 flex items-center gap-2">
+          <Check size={16} className="text-green-400" />
+          تم نسخ الرابط بنجاح
         </div>
       )}
 

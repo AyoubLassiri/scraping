@@ -18,7 +18,7 @@ export default function StandingsPage() {
             الترتيب ديال نادي مستقبل المرسى العيون الرياضي
           </h1>
           <p className="mt-2 text-white/90 text-sm sm:text-base font-medium">
-            البطولة 26/25
+            البطولة 26/27
           </p>
         </div>
       </div>

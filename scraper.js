@@ -25,6 +25,11 @@ const teamLogosMap = {
     "نادي وفا وداد CWW": "https://howatpress.net/wp-content/uploads/2021/04/IMG-20260901-WA0052.jpg"
 };
 
+// Manual override: club changed its official name, site still shows the old one
+const teamNameOverrides = {
+    "نادي مستقبل المرسى CMM": "نادي مستقبل المرسى العيون cmml"
+};
+
 async function scrapeData() {
     try {
         console.log('Fetching standings and match data...');
@@ -69,7 +74,7 @@ async function scrapeData() {
 
             standingsData.push({
                 position,
-                team_name: teamName,
+                team_name: teamNameOverrides[teamName] || teamName,
                 logo: logoUrl
             });
         });

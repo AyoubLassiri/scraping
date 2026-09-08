@@ -16,6 +16,7 @@ import AdminLogin from "./components/AdminLogin";
 import AdminDashboard from "./components/AdminDashboard";
 import PlayersPage from "./components/PlayersPage";
 import NewsPage from './components/NewsPage';
+import NewsSection from './components/NewsSection';
 
 
 
@@ -23,6 +24,7 @@ function HomePage() {
   return (
     <>
       <HomeHeader />
+      <NewsSection />   {/* Add this line */}
       <Standings />
       <Squad />
       <History />

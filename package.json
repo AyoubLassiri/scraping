@@ -27,10 +27,10 @@
     "scrape": "node scraper.js"
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "extends": "react-app",
+    "env": {
+      "jest": true
+    }
   },
   "browserslist": {
     "production": [

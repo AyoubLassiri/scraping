@@ -143,44 +143,44 @@ export default function HomeHeader() {
               النتيجة الأخيرة
             </h2>
             <Link
-              to="/standings"
-              className="relative bg-[#2596be] dark:bg-neutral-900 rounded-2xl shadow-md h-40 flex flex-col items-center justify-center gap-3 overflow-hidden border border-transparent dark:border-neutral-800 transition-colors hover:brightness-110 active:scale-[0.99] cursor-pointer"
-            >
-              <div
-                aria-hidden="true"
-                className="absolute -right-10 -bottom-10 w-52 h-52 rounded-full border-[18px] border-white/10 dark:border-white/5"
-              />
-              <p className="relative text-white/90 dark:text-neutral-300 text-xs sm:text-sm font-medium">
-                {lastMatch.date}
-              </p>
-              <div className="relative flex items-center justify-center gap-6 sm:gap-10">
-                <div className="flex flex-col items-center gap-2">
-                  <TeamBadge 
-                    initials={lastMatch.homeInitials} 
-                    logoLight={lastMatch.homeLogoLight} 
-                    logoDark={logoMostakhbal} 
-                    big 
-                  />
-                  <span className="text-white dark:text-neutral-100 text-sm font-semibold">
-                    {lastMatch.homeTeam}
-                  </span>
-                </div>
-                <span className="text-white dark:text-sky-300 text-3xl sm:text-4xl font-extrabold">
-                  {lastMatch.score}
-                </span>
-                <div className="flex flex-col items-center gap-2">
-                  <TeamBadge 
-                    initials={lastMatch.awayInitials} 
-                    logoLight={lastMatch.awayLogoLight} 
-                    logoDark={lastMatch.awayLogoLight} 
-                    big 
-                  />
-                  <span className="text-white dark:text-neutral-100 text-sm font-semibold">
-                    {lastMatch.awayTeam}
-                  </span>
-                </div>
-              </div>
-            </Link>
+  to="/standings"
+  className="relative bg-[#2596be] dark:bg-neutral-900 rounded-2xl shadow-md min-h-[180px] flex flex-col items-center justify-center gap-2 overflow-hidden border border-transparent dark:border-neutral-800 transition-colors hover:brightness-110 active:scale-[0.99] cursor-pointer px-3 py-4"
+>
+  <div
+    aria-hidden="true"
+    className="absolute -right-10 -bottom-10 w-52 h-52 rounded-full border-[18px] border-white/10 dark:border-white/5"
+  />
+  <p className="relative text-white/90 dark:text-neutral-300 text-xs sm:text-sm font-medium">
+    {lastMatch.date}
+  </p>
+  <div className="relative flex items-center justify-center gap-3 sm:gap-6 w-full">
+    <div className="flex flex-col items-center gap-1 flex-1 min-w-0">
+      <TeamBadge 
+        initials={lastMatch.homeInitials} 
+        logoLight={lastMatch.homeLogoLight} 
+        logoDark={logoMostakhbal} 
+        big 
+      />
+      <span className="text-white dark:text-neutral-100 text-xs sm:text-sm font-semibold text-center leading-tight max-w-[100px] sm:max-w-[140px]">
+        {lastMatch.homeTeam}
+      </span>
+    </div>
+    <span className="text-white dark:text-sky-300 text-2xl sm:text-3xl font-extrabold flex-shrink-0">
+      {lastMatch.score}
+    </span>
+    <div className="flex flex-col items-center gap-1 flex-1 min-w-0">
+      <TeamBadge 
+        initials={lastMatch.awayInitials} 
+        logoLight={lastMatch.awayLogoLight} 
+        logoDark={lastMatch.awayLogoLight} 
+        big 
+      />
+      <span className="text-white dark:text-neutral-100 text-xs sm:text-sm font-semibold text-center leading-tight max-w-[100px] sm:max-w-[140px]">
+        {lastMatch.awayTeam}
+      </span>
+    </div>
+  </div>
+</Link>
           </div>
 
           {/* Right Container: Next Match */}
@@ -189,44 +189,44 @@ export default function HomeHeader() {
               المباراة القادمة
             </h2>
             <Link
-              to="/standings"
-              className="relative bg-[#2596be] dark:bg-neutral-900 rounded-2xl shadow-md h-40 flex flex-col items-center justify-center gap-3 overflow-hidden border border-transparent dark:border-neutral-800 transition-colors hover:brightness-110 active:scale-[0.99] cursor-pointer"
-            >
-              <div
-                aria-hidden="true"
-                className="absolute -left-10 -bottom-10 w-52 h-52 rounded-full border-[18px] border-white/10 dark:border-white/5"
-              />
-              <p className="relative text-white/90 dark:text-neutral-300 text-xs sm:text-sm font-medium">
-                {nextMatch.date}
-              </p>
-              <div className="relative flex items-center justify-center gap-6 sm:gap-10">
-                <div className="flex flex-col items-center gap-2">
-                  <TeamBadge 
-                    initials={nextMatch.homeInitials} 
-                    logoLight={nextMatch.homeLogoLight} 
-                    logoDark={logoMostakhbal} 
-                    big 
-                  />
-                  <span className="text-white dark:text-neutral-100 text-sm font-semibold">
-                    {nextMatch.homeTeam}
-                  </span>
-                </div>
-                <span className="text-white dark:text-sky-300 text-xl sm:text-2xl font-extrabold px-3 py-1 bg-white/20 dark:bg-neutral-800/80 rounded-lg">
-                  VS
-                </span>
-                <div className="flex flex-col items-center gap-2">
-                  <TeamBadge 
-                    initials={nextMatch.awayInitials} 
-                    logoLight={nextMatch.awayLogoLight} 
-                    logoDark={nextMatch.awayLogoLight} 
-                    big 
-                  />
-                  <span className="text-white dark:text-neutral-100 text-sm font-semibold">
-                    {nextMatch.awayTeam}
-                  </span>
-                </div>
-              </div>
-            </Link>
+  to="/standings"
+  className="relative bg-[#2596be] dark:bg-neutral-900 rounded-2xl shadow-md min-h-[180px] flex flex-col items-center justify-center gap-2 overflow-hidden border border-transparent dark:border-neutral-800 transition-colors hover:brightness-110 active:scale-[0.99] cursor-pointer px-3 py-4"
+>
+  <div
+    aria-hidden="true"
+    className="absolute -left-10 -bottom-10 w-52 h-52 rounded-full border-[18px] border-white/10 dark:border-white/5"
+  />
+  <p className="relative text-white/90 dark:text-neutral-300 text-xs sm:text-sm font-medium">
+    {nextMatch.date}
+  </p>
+  <div className="relative flex items-center justify-center gap-3 sm:gap-6 w-full">
+    <div className="flex flex-col items-center gap-1 flex-1 min-w-0">
+      <TeamBadge 
+        initials={nextMatch.homeInitials} 
+        logoLight={nextMatch.homeLogoLight} 
+        logoDark={logoMostakhbal} 
+        big 
+      />
+      <span className="text-white dark:text-neutral-100 text-xs sm:text-sm font-semibold text-center leading-tight max-w-[100px] sm:max-w-[140px]">
+        {nextMatch.homeTeam}
+      </span>
+    </div>
+    <span className="text-white dark:text-sky-300 text-xl sm:text-2xl font-extrabold px-3 py-1 bg-white/20 dark:bg-neutral-800/80 rounded-lg flex-shrink-0">
+      VS
+    </span>
+    <div className="flex flex-col items-center gap-1 flex-1 min-w-0">
+      <TeamBadge 
+        initials={nextMatch.awayInitials} 
+        logoLight={nextMatch.awayLogoLight} 
+        logoDark={nextMatch.awayLogoLight} 
+        big 
+      />
+      <span className="text-white dark:text-neutral-100 text-xs sm:text-sm font-semibold text-center leading-tight max-w-[100px] sm:max-w-[140px]">
+        {nextMatch.awayTeam}
+      </span>
+    </div>
+  </div>
+</Link>
           </div>
 
         </div>
